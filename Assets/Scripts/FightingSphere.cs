@@ -7,7 +7,6 @@ public class FightingSphere : MonoBehaviour
     [SerializeField, Range(0f, 10)] int maxAirJumps = 1;
     [SerializeField, Min(0f)] float probeDistance = 1f;
     [SerializeField] LayerMask probeMask = -1;
-    public int gemsCollected = 0;
     float minGroundDotProduct;
     int jumpPhase = 0;
     Vector3 velocity = Vector3.zero;
@@ -78,10 +77,10 @@ public class FightingSphere : MonoBehaviour
             velocity += contactNormal * jumpSpeed;
         }
     }
+    public int stars = 0;
     void OnTriggerEnter(Collider other) {
-        if (other.gameObject.tag == "gem") {
-            gemsCollected++;
-            Destroy(other.gameObject);
+        if (other.gameObject.tag == "star") {
+            stars++;
         }    
     }
     void OnCollisionEnter(Collision collision)
