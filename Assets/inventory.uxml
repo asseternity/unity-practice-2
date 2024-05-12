@@ -1,0 +1,8 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <ui:VisualElement name="container" style="flex-grow: 1; flex-direction: row; justify-content: center; align-items: center; align-self: center;">
+        <ui:VisualElement name="inventoryWindow" style="flex-grow: 1; width: 500px; height: 300px; left: 0; top: 0; right: 0; bottom: 0; position: relative; align-items: auto; background-color: rgba(91, 234, 0, 0.57); max-width: 500px; min-width: 500px; max-height: 300px; min-height: 300px;">
+            <ui:Button text="Close" parse-escape-sequences="true" display-tooltip-when-elided="true" name="closeInventory" />
+            <ui:ListView header-title="Inventory" name="inventory" style="max-width: 450px; min-width: 450px; max-height: 225px; min-height: 225px; left: -25px; top: 10px;" />
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

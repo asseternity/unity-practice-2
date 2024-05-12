@@ -4,10 +4,11 @@ using UnityEngine;
 
 public class StarScript : MonoBehaviour
 {
-    void OnCollisionEnter (Collision collision)
+    void OnTriggerEnter(Collider collision)
     {
-        if (collision.gameObject.tag == "Player") {
-            Destroy(gameObject, 0.3f);
+        if (collision.gameObject.tag == "Player")
+        {
+            Destroy(gameObject, 0f);
         }
     }
 }
