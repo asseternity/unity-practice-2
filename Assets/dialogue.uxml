@@ -1,0 +1,14 @@
+<ui:UXML xmlns:ui="UnityEngine.UIElements" xmlns:uie="UnityEditor.UIElements" editor-extension-mode="False">
+    <Style src="project://database/Assets/dialogue.uss?fileID=7433441132597879392&amp;guid=4480b4232fa2fc845836331718667eec&amp;type=3#dialogue" />
+    <ui:VisualElement name="Container" class="d_container">
+        <ui:VisualElement name="DialogueWindow" class="d_dialogueWindow">
+            <ui:VisualElement name="HeaderBar" style="flex-grow: 1; flex-direction: row; justify-content: space-between;">
+                <ui:Label tabindex="-1" text="Name" parse-escape-sequences="true" display-tooltip-when-elided="true" name="Header" class="d_header" />
+                <ui:Button text="x" parse-escape-sequences="true" display-tooltip-when-elided="true" name="CloseDialogue" style="padding-top: 0; padding-right: 5px; padding-bottom: 0; padding-left: 5px; margin-top: 5px; margin-right: 5px; margin-bottom: 5px; margin-left: 5px; width: 20px; height: 20px;" />
+            </ui:VisualElement>
+            <ui:VisualElement name="BodyBar" style="flex-grow: 1;">
+                <ui:Label tabindex="-1" text="Dialogue text" parse-escape-sequences="true" display-tooltip-when-elided="true" name="DialogueText" class="d_dialogueText" />
+            </ui:VisualElement>
+        </ui:VisualElement>
+    </ui:VisualElement>
+</ui:UXML>

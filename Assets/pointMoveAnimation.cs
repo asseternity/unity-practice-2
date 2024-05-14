@@ -7,6 +7,7 @@ public class pointMoveAnimation : MonoBehaviour
 {
     [SerializeField]
     private NavMeshAgent _agent = null;
+    public bool movementBlocked = false;
     public Camera orbitCamera;
 
     [SerializeField]
@@ -14,6 +15,7 @@ public class pointMoveAnimation : MonoBehaviour
 
     [SerializeField]
     private Rigidbody m_rigidBody = null;
+    private float currentMoveSpeed;
 
     private void Awake()
     {
@@ -40,23 +42,30 @@ public class pointMoveAnimation : MonoBehaviour
             // We then check to see if hit has any data for the player to move to
             if (Physics.Raycast(ray, out hit))
             {
-                //  If it does, we then need to call
-                // a function within our nav mesh agent variable, _agent.SetDestination()
-                // and pass in the hit variable as hit.point.
-                _agent.SetDestination(hit.point);
+                if (hit.collider.name != "npc1" && movementBlocked == false)
+                {
+                    //  If it does, we then need to call
+                    // a function within our nav mesh agent variable, _agent.SetDestination()
+                    // and pass in the hit variable as hit.point.
+                    _agent.SetDestination(hit.point);
+                }
             }
         }
+        // get our speed
+        currentMoveSpeed = _agent.velocity.magnitude;
+        m_animator.SetFloat("MoveSpeed", currentMoveSpeed);
         // Check if the agent is moving
         if (_agent.hasPath && _agent.remainingDistance > _agent.stoppingDistance)
         {
             // Agent is moving
-            Debug.Log("Agent is moving");
-            m_animator.SetFloat("MoveSpeed", 3.5f);
+            // Debug.Log("Agent is moving");
+            m_animator.SetFloat("MoveSpeed", currentMoveSpeed);
         }
         else
         {
             // Agent is not moving
-            Debug.Log("Agent is not moving");
+            // Debug.Log("Agent is not moving");
+            m_animator.SetFloat("MoveSpeed", currentMoveSpeed);
             m_animator.SetBool("Grounded", true);
         }
     }
