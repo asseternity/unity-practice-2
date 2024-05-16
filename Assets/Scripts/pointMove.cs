@@ -27,6 +27,30 @@ public class pointMove : MonoBehaviour
                 // and pass in the hit variable as hit.point.
                 _agent.SetDestination(hit.point);
             }
+            Debug.Log(hit.transform);
+            if (hit.transform)
+            {
+                Debug.Log(CalculatePathLength(hit.transform));
+            }
+        }
+    }
+
+    public float CalculatePathLength(Transform target)
+    {
+        Debug.Log("CalculatePathLength called!");
+        NavMeshPath Path = new NavMeshPath();
+        if (NavMesh.CalculatePath(transform.position, target.position, _agent.areaMask, Path))
+        {
+            float distance = Vector3.Distance(transform.position, Path.corners[0]);
+            for (int i = 1; i < Path.corners.Length; i++)
+            {
+                distance += Vector3.Distance(Path.corners[i - 1], Path.corners[i]);
+            }
+            return distance;
+        }
+        else
+        {
+            return 0;
         }
     }
 }

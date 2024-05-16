@@ -49,6 +49,10 @@ public class pointMoveAnimation : MonoBehaviour
                     // and pass in the hit variable as hit.point.
                     _agent.SetDestination(hit.point);
                 }
+                if (hit.collider.name != "Terrain" && hit.transform)
+                {
+                    CalculatePathLength(hit.transform);
+                }
             }
         }
         // get our speed
@@ -67,6 +71,28 @@ public class pointMoveAnimation : MonoBehaviour
             // Debug.Log("Agent is not moving");
             m_animator.SetFloat("MoveSpeed", currentMoveSpeed);
             m_animator.SetBool("Grounded", true);
+        }
+    }
+
+    public float CalculatePathLength(Transform target)
+    {
+        Debug.Log("CalculatePathLength called!");
+        NavMeshPath Path = new NavMeshPath();
+        if (NavMesh.CalculatePath(transform.position, target.position, _agent.areaMask, Path))
+        {
+            Debug.Log("NavMesh.CalculatePath == true!");
+            float distance = Vector3.Distance(transform.position, Path.corners[0]);
+            Debug.Log(Path.corners);
+            for (int i = 1; i < Path.corners.Length; i++)
+            {
+                distance += Vector3.Distance(Path.corners[i - 1], Path.corners[i]);
+            }
+            Debug.Log(distance);
+            return distance;
+        }
+        else
+        {
+            return 0;
         }
     }
 }
