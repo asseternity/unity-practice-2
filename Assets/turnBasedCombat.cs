@@ -42,7 +42,6 @@ public class turnBasedCombat : MonoBehaviour
 
     void PlayersTurn()
     {
-        // 1) get the pointMoveAnimation to track how much distance it covered for each click:
-        // https://www.youtube.com/watch?v=BFT8Fa4ZsMk&t=1s&ab_channel=LlamAcademy
+        // 1) get the pointMoveAnimation to track how much distance it covered for each click
     }
 }

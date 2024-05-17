@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.UIElements;
 
 public class pointMoveAnimation : MonoBehaviour
 {
@@ -16,6 +17,8 @@ public class pointMoveAnimation : MonoBehaviour
     [SerializeField]
     private Rigidbody m_rigidBody = null;
     private float currentMoveSpeed;
+    public float combat_maxMove = 30f;
+    public float combat_moveLeft = 30f;
 
     private void Awake()
     {
@@ -44,14 +47,20 @@ public class pointMoveAnimation : MonoBehaviour
             {
                 if (hit.collider.name != "npc1" && movementBlocked == false)
                 {
-                    //  If it does, we then need to call
+                    // How much movement we have left;
+                    combat_moveLeft -= CalculatePathLength(hit.point);
+                    // If it does, we then need to call
                     // a function within our nav mesh agent variable, _agent.SetDestination()
                     // and pass in the hit variable as hit.point.
-                    _agent.SetDestination(hit.point);
-                }
-                if (hit.collider.name != "Terrain" && hit.transform)
-                {
-                    CalculatePathLength(hit.transform);
+                    if (combat_moveLeft > 0)
+                    {
+                        _agent.SetDestination(hit.point);
+                        Debug.Log("Movement remaining:" + combat_moveLeft);
+                    }
+                    else
+                    {
+                        Debug.Log("Not enough movement to reach destination!");
+                    }
                 }
             }
         }
@@ -74,15 +83,12 @@ public class pointMoveAnimation : MonoBehaviour
         }
     }
 
-    public float CalculatePathLength(Transform target)
+    public float CalculatePathLength(Vector3 mousePosition)
     {
-        Debug.Log("CalculatePathLength called!");
         NavMeshPath Path = new NavMeshPath();
-        if (NavMesh.CalculatePath(transform.position, target.position, _agent.areaMask, Path))
+        if (NavMesh.CalculatePath(transform.position, mousePosition, _agent.areaMask, Path))
         {
-            Debug.Log("NavMesh.CalculatePath == true!");
             float distance = Vector3.Distance(transform.position, Path.corners[0]);
-            Debug.Log(Path.corners);
             for (int i = 1; i < Path.corners.Length; i++)
             {
                 distance += Vector3.Distance(Path.corners[i - 1], Path.corners[i]);
