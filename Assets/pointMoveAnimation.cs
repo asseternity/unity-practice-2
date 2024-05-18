@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.InputSystem;
 using UnityEngine.UIElements;
 
 public class pointMoveAnimation : MonoBehaviour
@@ -19,6 +20,7 @@ public class pointMoveAnimation : MonoBehaviour
     private float currentMoveSpeed;
     public float combat_maxMove = 30f;
     public float combat_moveLeft = 30f;
+    public bool isInCombat = false;
 
     private void Awake()
     {
@@ -34,52 +36,55 @@ public class pointMoveAnimation : MonoBehaviour
 
     void Update()
     {
-        // If the player clicks on the left mouse button
-        if (Input.GetMouseButtonDown(0))
+        if (blockMovement == false)
         {
-            // we want to fire a ray toward where we place the mouse cursor
-            // So we need to store the camera to access the ability to screen point a ray using the mouse position
-            Ray ray = orbitCamera.ScreenPointToRay(Input.mousePosition);
-            // We also need to store the location “where we clicked” into a “RaycastHit” variable called hit
-            RaycastHit hit;
-            // We then check to see if hit has any data for the player to move to
-            if (Physics.Raycast(ray, out hit))
+            // If the player clicks on the left mouse button
+            if (Input.GetMouseButtonDown(0))
             {
-                if (hit.collider.name != "npc1" && movementBlocked == false)
+                // we want to fire a ray toward where we place the mouse cursor
+                // So we need to store the camera to access the ability to screen point a ray using the mouse position
+                Ray ray = orbitCamera.ScreenPointToRay(Input.mousePosition);
+                // We also need to store the location “where we clicked” into a “RaycastHit” variable called hit
+                RaycastHit hit;
+                // We then check to see if hit has any data for the player to move to
+                if (Physics.Raycast(ray, out hit))
                 {
-                    // How much movement we have left;
-                    combat_moveLeft -= CalculatePathLength(hit.point);
-                    // If it does, we then need to call
-                    // a function within our nav mesh agent variable, _agent.SetDestination()
-                    // and pass in the hit variable as hit.point.
-                    if (combat_moveLeft > 0)
+                    if (hit.collider.name != "npc1" && movementBlocked == false)
                     {
-                        _agent.SetDestination(hit.point);
-                        Debug.Log("Movement remaining:" + combat_moveLeft);
-                    }
-                    else
-                    {
-                        Debug.Log("Not enough movement to reach destination!");
+                        // How much movement we have left;
+                        combat_moveLeft -= CalculatePathLength(hit.point);
+                        // If it does, we then need to call
+                        // a function within our nav mesh agent variable, _agent.SetDestination()
+                        // and pass in the hit variable as hit.point.
+                        if (!isInCombat || combat_moveLeft > 0)
+                        {
+                            _agent.SetDestination(hit.point);
+                            Debug.Log("Movement remaining:" + combat_moveLeft);
+                        }
+                        else
+                        {
+                            Debug.Log("Not enough movement to reach destination!");
+                        }
                     }
                 }
             }
-        }
-        // get our speed
-        currentMoveSpeed = _agent.velocity.magnitude;
-        m_animator.SetFloat("MoveSpeed", currentMoveSpeed);
-        // Check if the agent is moving
-        if (_agent.hasPath && _agent.remainingDistance > _agent.stoppingDistance)
-        {
-            // Agent is moving
-            // Debug.Log("Agent is moving");
+            // get our speed
+            currentMoveSpeed = _agent.velocity.magnitude;
             m_animator.SetFloat("MoveSpeed", currentMoveSpeed);
-        }
-        else
-        {
-            // Agent is not moving
-            // Debug.Log("Agent is not moving");
-            m_animator.SetFloat("MoveSpeed", currentMoveSpeed);
-            m_animator.SetBool("Grounded", true);
+            // Check if the agent is moving
+            if (_agent.hasPath && _agent.remainingDistance > _agent.stoppingDistance)
+            {
+                // Agent is moving
+                // Debug.Log("Agent is moving");
+                m_animator.SetFloat("MoveSpeed", currentMoveSpeed);
+            }
+            else
+            {
+                // Agent is not moving
+                // Debug.Log("Agent is not moving");
+                m_animator.SetFloat("MoveSpeed", currentMoveSpeed);
+                m_animator.SetBool("Grounded", true);
+            }
         }
     }
 
@@ -99,6 +104,46 @@ public class pointMoveAnimation : MonoBehaviour
         else
         {
             return 0;
+        }
+    }
+
+    void OnEndTurn()
+    {
+        Debug.Log("End Turn!");
+        combat_moveLeft = combat_maxMove;
+    }
+
+    private bool blockMovement = false;
+
+    void OnBlockMovement()
+    {
+        Debug.Log("Movement Blocked!");
+        blockMovement = true;
+    }
+
+    void ExitCombat()
+    {
+        Debug.Log("EXPLORATION MODE!");
+        isInCombat = false;
+        blockMovement = false;
+    }
+
+    void EnterCombat()
+    {
+        combat_moveLeft = 30f;
+        Debug.Log("COMBAT MODE!");
+        isInCombat = true;
+    }
+
+    void OnCombatMode()
+    {
+        if (isInCombat)
+        {
+            ExitCombat();
+        }
+        else
+        {
+            EnterCombat();
         }
     }
 }

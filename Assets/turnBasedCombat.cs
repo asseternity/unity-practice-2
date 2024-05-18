@@ -43,5 +43,12 @@ public class turnBasedCombat : MonoBehaviour
     void PlayersTurn()
     {
         // 1) get the pointMoveAnimation to track how much distance it covered for each click
+        // 2) make a button that, when pressed, switches it back to playersTurn, and resets the movement
+        // 3) button to end turn, blocking movement
+        // 4) switch from free roam mode to combat
+
+        // 5) create an enemy
+        // 6) enemy turn logic, activating on end player turn
+        // 7) when enemies have gone, they (1) enable player actions, (2) reset player resources
     }
 }
